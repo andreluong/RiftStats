@@ -6,10 +6,15 @@ on:
       - 'frontend/**'
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      runs:
+        working-directory: frontend
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
