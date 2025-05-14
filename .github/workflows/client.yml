@@ -2,6 +2,8 @@ name: RiftStats Client
 
 on:
   push:
+    paths:
+      - 'frontend/**'
     branches:
       - main
 
