@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+:root {
+  font-family: Helvetica, Arial, sans-serif;
+  text-align: center;
+}
+
+@layer components {
+  .gradient-background {
+    background: linear-gradient(180deg, #1e2939 0%, #101828 100%);
+  }
+}
