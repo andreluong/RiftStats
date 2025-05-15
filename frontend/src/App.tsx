@@ -53,9 +53,11 @@ function App() {
     }
   }, [championStats, role]);
 
-  if (gameVersionsError) {
-    console.error("Error loading patches", gameVersionsError);
-  }
+  useEffect(() => {
+    if (gameVersionsError) {
+      console.error("Error loading patches", gameVersionsError);
+    }
+  }, [gameVersionsError])
 
   return (
     <div className='gradient-background text-white min-h-screen'>
