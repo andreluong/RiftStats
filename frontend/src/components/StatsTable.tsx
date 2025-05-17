@@ -18,7 +18,7 @@ export default function StatsTable({
   const [isDescending, setIsDescending] = useState<boolean>(true);
 
   // Filter out low played stats
-  championStats = championStats.filter((champion) => champion.matches >= 5);
+  championStats = championStats.filter((champion) => champion.matches >= 25);
 
   // Sort champion stats
   championStats.sort((a, b) => {
@@ -48,6 +48,17 @@ export default function StatsTable({
       return compareNumbers(Number(aValue), Number(bValue));
     }  
   })
+
+  const headers: { label: StatsTableColumns; overrideDescending?: boolean }[] = [
+    { label: "Rank"},
+    { label: "Champion", overrideDescending: true },
+    { label: "Position" },
+    { label: "Tier", overrideDescending: true },
+    { label: "Win Rate" },
+    { label: "Pick Rate" },
+    { label: "Ban Rate" },
+    { label: "Matches" }
+  ]
 
   const getPositionIcon = (position: Position) => {
     var src = "/roles/inactive/role-fill.png";
@@ -101,64 +112,17 @@ export default function StatsTable({
       <Table striped="even" stripedColor='#101828' withTableBorder withColumnBorders verticalSpacing="sm" className='bg-gray-800'>
         <Table.Thead>
           <Table.Tr>
-            <StatsTableHeader
-              label="Rank"
-              selectedColumn={selectedColumn}
-              isDescending={isDescending}
-              setSelectedColumn={setSelectedColumn}
-              setIsDescending={setIsDescending}
-            />
-            <StatsTableHeader
-              label="Champion"
-              selectedColumn={selectedColumn}
-              isDescending={isDescending}
-              setSelectedColumn={setSelectedColumn}
-              setIsDescending={setIsDescending}
-              overrideDescending={true}
-            />
-            <StatsTableHeader
-              label="Position"
-              selectedColumn={selectedColumn}
-              isDescending={isDescending}
-              setSelectedColumn={setSelectedColumn}
-              setIsDescending={setIsDescending}
-            />
-            <StatsTableHeader
-              label="Tier"
-              selectedColumn={selectedColumn}
-              isDescending={isDescending}
-              setSelectedColumn={setSelectedColumn}
-              setIsDescending={setIsDescending}
-              overrideDescending={true}
-            />
-            <StatsTableHeader
-              label="Win Rate"
-              selectedColumn={selectedColumn}
-              isDescending={isDescending}
-              setSelectedColumn={setSelectedColumn}
-              setIsDescending={setIsDescending}
-            />
-            <StatsTableHeader
-              label="Pick Rate"
-              selectedColumn={selectedColumn}
-              isDescending={isDescending}
-              setSelectedColumn={setSelectedColumn}
-              setIsDescending={setIsDescending}
-            />
-            <StatsTableHeader
-              label="Ban Rate"
-              selectedColumn={selectedColumn}
-              isDescending={isDescending}
-              setSelectedColumn={setSelectedColumn}
-              setIsDescending={setIsDescending}
-            />
-            <StatsTableHeader
-              label="Matches"
-              selectedColumn={selectedColumn}
-              isDescending={isDescending}
-              setSelectedColumn={setSelectedColumn}
-              setIsDescending={setIsDescending}
-            />
+            {headers.map((h) => (
+              <StatsTableHeader
+                key={h.label}
+                label={h.label}
+                selectedColumn={selectedColumn}
+                isDescending={isDescending}
+                setSelectedColumn={setSelectedColumn}
+                setIsDescending={setIsDescending}
+                overrideDescending={h.overrideDescending}
+              />
+            ))}
           </Table.Tr>
         </Table.Thead>
         {!championStatsLoading && championStats && championStats.length > 0 && (
