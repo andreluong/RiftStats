@@ -10,6 +10,8 @@ import { useEffect, useState } from 'react'
 import useSWR from 'swr';
 import { fetcher } from './lib/utils'
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function App() {
   const [role, setRole] = useState<Role>("ALL");
   const [patch, setPatch] = useState<string>("15.7");
@@ -20,19 +22,19 @@ function App() {
     data: numMatches,
     error: numMatchesError,
     isLoading: numMatchesLoading
-  } = useSWR<number>(`/api/matches/count`, fetcher);
+  } = useSWR<number>(`${API_URL}/api/matches/count`, fetcher);
 
   const {
       data: gameVersions,
       error: gameVersionsError,
       isLoading: gameVersionsLoading
-  } = useSWR<GameVersion[]>(`/api/game-versions/all`, fetcher);
+  } = useSWR<GameVersion[]>(`${API_URL}/api/game-versions/all`, fetcher);
 
   const {
     data: championStats,
     error: championStatsError,
     isLoading: championStatsLoading
-  } = useSWR<ChampionStats[]>(`/api/champion-stats/${regionCode}/${patch}/winrates`, fetcher);
+  } = useSWR<ChampionStats[]>(`${API_URL}/api/champion-stats/${regionCode}/${patch}/winrates`, fetcher);
 
   useEffect(() => {
     if (gameVersions && gameVersions.length > 0) {
