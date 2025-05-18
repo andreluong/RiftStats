@@ -7,7 +7,7 @@ const tierOrder = ["S", "A", "B", "C", "D"];
 
 const tierColorMap: Record<Tier, string> = {
   S: "text-pink-400",
-  A: "text-purple-400",
+  A: "text-purple-300",
   B: "text-blue-400",
   C: "text-teal-400",
   D: "text-gray-500"
