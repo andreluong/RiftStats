@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -88,7 +90,8 @@ public class RiotService {
             }
         }
         // Schedule next fetch execution
-        log.warn("Finished current fetching task. Waiting {} until next scheduled task.", DEFAULT_FETCH_INTERVAL);
+        ZonedDateTime nextExecution = ZonedDateTime.now().plus(DEFAULT_FETCH_INTERVAL);
+        log.warn("Finished current fetching task. Next scheduled task begins at: {}", nextExecution.format(DateTimeFormatter.ISO_ZONED_DATE_TIME));
         scheduleNextExecution(DEFAULT_FETCH_INTERVAL);
     }
 
@@ -111,13 +114,12 @@ public class RiotService {
     // Fetch all challenger players from a region and their last 20 matches
     // Regions can have a different amount of challenger players (50-300)
     // Amount can also be 0 if there aren't any challenger players (due to rank reset, etc)
+    // NOTE: Limit of 1,000,000 messages in CloudAQMP Lemur
     private void fetchChallengerLeague(RegionGroup regionGroup, RegionCode regionCode) {
         LeagueDTO leagueList = leagueApiClient.getChallengerList(riotApiKey);
         List<PlayerDTO> playerDTOS = leagueList.getEntries();
         log.info("Fetching {}: {} {}; count: {}", regionCode, leagueList.getTier(), leagueList.getQueue(), playerDTOS.size());
-        // NOTE: Limited due to CloudAMQP lemur restrictions
-        // Currently looks at top half of players of each region
-        int limitedSize = Math.min(playerDTOS.size(), regionCode.getLeagueSize(LeagueTier.CHALLENGER) / 2);
+        int limitedSize = Math.min(playerDTOS.size(), regionCode.getLeagueSize(LeagueTier.CHALLENGER));
         playerDTOS.subList(0, limitedSize).forEach(player -> fetchMatchIds(player.getPuuid(), regionGroup, regionCode));
     }
 
