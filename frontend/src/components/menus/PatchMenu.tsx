@@ -1,4 +1,4 @@
-import { Menu, Button } from "@mantine/core";
+import { Menu, Button, Tooltip } from "@mantine/core";
 import { GameVersion } from "../../types";
 
 export default function PatchMenu({
@@ -15,9 +15,20 @@ export default function PatchMenu({
   return (
     <Menu shadow="md" width={75}>
       <Menu.Target>
-        <Button variant="outline" color="white" loading={gameVersionLoading}>
-          {selectedPatch}
-        </Button>
+        <Tooltip label="Change Patch" withArrow>
+          <Button 
+            variant="outline" 
+            color="white" 
+            loading={gameVersionLoading}
+            styles={{
+              root: {
+                "--button-hover-color": "oklch(55.1% 0.027 264.364)"
+              }
+            }}
+          >
+            {selectedPatch}
+          </Button>
+        </Tooltip>
       </Menu.Target>
       <Menu.Dropdown>
         {!gameVersionLoading && gameVersions && gameVersions.length === 0 && (
