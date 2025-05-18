@@ -64,10 +64,8 @@ jobs:
             docker stop riftstats-backend || true
             docker rm -f riftstats-backend || true
             docker run -d \
+              --env-file ./home/ec2-user/riftstats-backend.env \
               --name riftstats-backend \
               --restart unless-stopped \
-              -e SPRING_DATASOURCE_URL="${{ secrets.DATABASE_URL }}" \
-              -e SPRING_DATASOURCE_USERNAME="${{ secrets.DATABASE_USERNAME }}" \
-              -e SPRING_DATASOURCE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}" \
               -p 8080:8080 \
               ${{ secrets.DOCKER_USERNAME }}/riftstats-backend:latest
