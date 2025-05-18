@@ -58,10 +58,10 @@ export default function StatsTable({
   const [isDescending, setIsDescending] = useState<boolean>(true);
 
   // Filter out low played stats
-  championStats = championStats.filter((champion) => champion.matches >= 25);
+  const filterLowPlayedChampionStats = championStats.filter((champion) => champion.matches >= 25);
 
   // Sort champion stats
-  championStats.sort((a, b) => {
+  const sortedChampionStats = [...filterLowPlayedChampionStats].sort((a, b) => {
     const key = HeaderToChampionStats[selectedColumn];
     const aValue = a[key];
     const bValue = b[key];
@@ -89,7 +89,7 @@ export default function StatsTable({
     }  
   })
 
-  const rows = championStats.map((champion, index) => (
+  const rows = sortedChampionStats.map((champion, index) => (
     <Table.Tr key={champion.name + champion.position} className='text-lg'>
       <Table.Td className='w-20'>{index + 1}</Table.Td>
       <Table.Td className='w-92'>{champion.name}</Table.Td>
@@ -120,13 +120,13 @@ export default function StatsTable({
             ))}
           </Table.Tr>
         </Table.Thead>
-        {!championStatsLoading && championStats && championStats.length > 0 && (
+        {!championStatsLoading && sortedChampionStats && sortedChampionStats.length > 0 && (
           <Table.Tbody>{rows}</Table.Tbody>
         )}
       </Table>
       {championStatsLoading && <p className='pt-4'>Loading champion stats...</p>}
-      {!championStatsLoading && championStats && championStats.length === 0 && <p className='pt-4'>No champion stats available</p>}
-      {championStatsError && !championStats&& <p className='pt-4'>Error loading champion stats</p>}
+      {!championStatsLoading && sortedChampionStats && sortedChampionStats.length === 0 && <p className='pt-4'>No champion stats available</p>}
+      {championStatsError && !sortedChampionStats&& <p className='pt-4'>Error loading champion stats</p>}
     </> 
   );
 }
