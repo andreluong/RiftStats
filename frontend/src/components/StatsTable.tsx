@@ -1,9 +1,49 @@
 import { Table, Tooltip } from '@mantine/core';
-import { ChampionStats, HeaderToChampionStats, Position, StatsTableColumns } from '../types';
+import { ChampionStats, HeaderToChampionStats, Position, StatsTableColumns, Tier } from '../types';
 import { useState } from 'react';
 import StatsTableHeader from './StatsTableHeader';
 
 const tierOrder = ["S", "A", "B", "C", "D"];
+
+const tierColorMap: Record<Tier, string> = {
+  S: "text-pink-400",
+  A: "text-purple-400",
+  B: "text-blue-400",
+  C: "text-teal-400",
+  D: "text-gray-500"
+};
+
+const positionIconMap: Record<Position, { src: string; alt: string }> = {
+  TOP: { src: "/roles/inactive/role-top.png", alt: "Top"},
+  JUNGLE: { src: "/roles/inactive/role-jungle.png", alt: "Jungle"},
+  MIDDLE: { src: "/roles/inactive/role-mid.png", alt: "Middle"},
+  BOTTOM: { src: "/roles/inactive/role-bot.png", alt: "Bottom"},
+  UTILITY: { src: "/roles/inactive/role-support.png", alt: "Support"}
+}
+
+const getPositionIcon = (position: Position) => {
+  const { src, alt } = positionIconMap[position] || { 
+    src: "/roles/inactive/role-fill.png", 
+    alt: "Fill"
+  };
+
+  return (
+    <Tooltip label={alt} withArrow>
+      <img src={src} alt={alt} className="w-6 h-6 mx-auto" />
+    </Tooltip>
+  )
+}
+
+const headers: { label: StatsTableColumns; overrideDescending?: boolean }[] = [
+  { label: "Rank"},
+  { label: "Champion", overrideDescending: true },
+  { label: "Position" },
+  { label: "Tier", overrideDescending: true },
+  { label: "Win Rate" },
+  { label: "Pick Rate" },
+  { label: "Ban Rate" },
+  { label: "Matches" }
+]
 
 export default function StatsTable({
   championStats,
@@ -49,57 +89,12 @@ export default function StatsTable({
     }  
   })
 
-  const headers: { label: StatsTableColumns; overrideDescending?: boolean }[] = [
-    { label: "Rank"},
-    { label: "Champion", overrideDescending: true },
-    { label: "Position" },
-    { label: "Tier", overrideDescending: true },
-    { label: "Win Rate" },
-    { label: "Pick Rate" },
-    { label: "Ban Rate" },
-    { label: "Matches" }
-  ]
-
-  const getPositionIcon = (position: Position) => {
-    var src = "/roles/inactive/role-fill.png";
-    var alt = "Fill";
-
-    switch (position) {
-      case "TOP":
-        src = "/roles/inactive/role-top.png";
-        alt = "Top";
-        break;
-      case "JUNGLE":
-        src = "/roles/inactive/role-jungle.png";
-        alt = "Jungle";
-        break;
-      case "MIDDLE":
-        src = "/roles/inactive/role-mid.png";
-        alt = "Middle";
-        break;
-      case "BOTTOM":
-        src = "/roles/inactive/role-bot.png";
-        alt = "Bottom";
-        break;
-      case "UTILITY":
-        src = "/roles/inactive/role-support.png";
-        alt = "Support";
-      break;
-    }
-
-    return (
-      <Tooltip label={alt} withArrow>
-        <img src={src} alt={alt} className="w-6 h-6 mx-auto" />
-      </Tooltip>
-    )
-  }
-
   const rows = championStats.map((champion, index) => (
-    <Table.Tr key={champion.name + champion.position}>
+    <Table.Tr key={champion.name + champion.position} className='text-lg'>
       <Table.Td className='w-20'>{index + 1}</Table.Td>
-      <Table.Td className='w-80'>{champion.name}</Table.Td>
-      <Table.Td className="w-12">{getPositionIcon(champion.position)}</Table.Td>
-      <Table.Td className="w-20">{champion.tier}</Table.Td>
+      <Table.Td className='w-92'>{champion.name}</Table.Td>
+      <Table.Td className="w-24">{getPositionIcon(champion.position)}</Table.Td>
+      <Table.Td className={`w-20 font-semibold ${tierColorMap[champion.tier] || ""}`}>{champion.tier}</Table.Td>
       <Table.Td>{(champion.winRate * 100).toFixed(2) + "%"}</Table.Td>
       <Table.Td>{(champion.pickRate * 100).toFixed(2) + "%"}</Table.Td>
       <Table.Td>{(champion.banRate * 100).toFixed(2) + "%"}</Table.Td>
