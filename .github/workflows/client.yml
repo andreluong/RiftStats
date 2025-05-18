@@ -10,14 +10,15 @@ on:
 
 jobs:
   build:
-    name: Build and Deploy Client
+    name: Build Client
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -31,7 +32,24 @@ jobs:
         run: npm run build
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
-      
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-dist
+          path: frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: client-dist
+          path: dist
+
       - name: Set AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -40,4 +58,4 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}  
 
       - name: Deploy to S3 bucket
-        run: aws s3 sync ./dist/ s3://riftstats-client --delete
+        run: aws s3 sync dist/ s3://riftstats-client --delete
