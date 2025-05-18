@@ -6,7 +6,6 @@ output/
 !**/src/main/**/build/
 !**/src/test/**/build/
 data/rabbitmq
-gradle
 **/src/main/resources/application.properties
 
 ### STS ###
