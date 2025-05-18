@@ -1,10 +1,10 @@
 package com.riftstats.enums;
 
 public enum ChampionTier {
-    S("S", 0.38),
-    A("A", 0.34),
-    B("B", 0.29),
-    C("C", 0.24),
+    S("S", 0.34),
+    A("A", 0.32),
+    B("B", 0.3),
+    C("C", 0.28),
     D("D", 0);
 
     private final String value;
