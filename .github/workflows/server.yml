@@ -64,7 +64,7 @@ jobs:
             docker stop riftstats-backend || true
             docker rm -f riftstats-backend || true
             docker run -d \
-              --env-file ./home/ec2-user/riftstats-backend.env \
+              --env-file /home/ec2-user/riftstats-backend.env \
               --name riftstats-backend \
               --restart unless-stopped \
               -p 8080:8080 \
