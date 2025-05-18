@@ -11,6 +11,7 @@ import useSWR from 'swr';
 import { fetcher } from './lib/utils'
 
 const API_URL = import.meta.env.VITE_API_URL;
+const TEN_MINUTES_IN_MS = 600000;
 
 function App() {
   const [role, setRole] = useState<Role>("ALL");
@@ -18,23 +19,35 @@ function App() {
   const [regionCode, setRegionCode] = useState<RegionCode>("all");
   const [filteredChampionStats, setFilteredChampionStats] = useState<ChampionStats[]>([]);
 
+  // Fetch number of matches
   const {
     data: numMatches,
     error: numMatchesError,
     isLoading: numMatchesLoading
-  } = useSWR<number>(`${API_URL}/api/matches/count`, fetcher);
+  } = useSWR<number>(`${API_URL}/api/matches/count`, fetcher, {
+    refreshInterval: TEN_MINUTES_IN_MS,
+    revalidateOnFocus: false
+  });
 
+  // Fetch all game versions
   const {
       data: gameVersions,
       error: gameVersionsError,
       isLoading: gameVersionsLoading
-  } = useSWR<GameVersion[]>(`${API_URL}/api/game-versions/all`, fetcher);
+  } = useSWR<GameVersion[]>(`${API_URL}/api/game-versions/all`, fetcher, {
+    refreshInterval: TEN_MINUTES_IN_MS,
+    revalidateOnFocus: false
+  });
 
+  // Fetch champion stats based on selected patch and region
   const {
     data: championStats,
     error: championStatsError,
     isLoading: championStatsLoading
-  } = useSWR<ChampionStats[]>(`${API_URL}/api/champion-stats/${regionCode}/${patch}/winrates`, fetcher);
+  } = useSWR<ChampionStats[]>(`${API_URL}/api/champion-stats/${regionCode}/${patch}/winrates`, fetcher, {
+    refreshInterval: TEN_MINUTES_IN_MS,
+    revalidateOnFocus: false
+  });
 
   useEffect(() => {
     if (gameVersions && gameVersions.length > 0) {
@@ -66,7 +79,7 @@ function App() {
       <p className='text-7xl font-bold pt-12 mb-4'>RiftStats</p>
       
       {!numMatchesError && <p>Matches Analyzed: {numMatchesLoading ? ("...") : (numMatches || 0)}</p>}
-      {numMatchesError && <p>Matches Analzyed: Unknown</p>}
+      {numMatchesError && <p>Matches Analyzed: Unknown</p>}
       
       <div className='mt-10 mx-auto w-4/6 pb-10'>
 
