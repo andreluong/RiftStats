@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.riftstats.configs.RabbitMQConfig;
 import com.riftstats.dtos.*;
+import com.riftstats.enums.LeagueTier;
 import com.riftstats.enums.RegionCode;
 import com.riftstats.enums.RegionGroup;
 import com.riftstats.clients.LeagueApiClient;
@@ -108,14 +109,16 @@ public class RiotService {
     }
 
     // Fetch all challenger players from a region and their last 20 matches
-    // Regions can have a different amount of challenger players (26-300)
+    // Regions can have a different amount of challenger players (50-300)
+    // Amount can also be 0 if there aren't any challenger players (due to rank reset, etc)
     private void fetchChallengerLeague(RegionGroup regionGroup, RegionCode regionCode) {
         LeagueDTO leagueList = leagueApiClient.getChallengerList(riotApiKey);
-        List<PlayerDTO> entries = leagueList.getEntries();
-        log.info("Fetching {}: {} {}; count: {}", regionCode, leagueList.getTier(), leagueList.getQueue(), entries.size());
+        List<PlayerDTO> playerDTOS = leagueList.getEntries();
+        log.info("Fetching {}: {} {}; count: {}", regionCode, leagueList.getTier(), leagueList.getQueue(), playerDTOS.size());
         // NOTE: Limited due to CloudAMQP lemur restrictions
-        // Currently looks at top 20 players of each region
-        entries.subList(0, 20).forEach(player -> fetchMatchIds(player.getPuuid(), regionGroup, regionCode));
+        // Currently looks at top half of players of each region
+        int limitedSize = Math.min(playerDTOS.size(), regionCode.getLeagueSize(LeagueTier.CHALLENGER) / 2);
+        playerDTOS.subList(0, limitedSize).forEach(player -> fetchMatchIds(player.getPuuid(), regionGroup, regionCode));
     }
 
     private void sendToPlayerQueue(String message, RegionGroup regionGroup, RegionCode regionCode) {
