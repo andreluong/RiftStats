@@ -76,7 +76,7 @@ function App() {
   }, [gameVersionsError])
 
   return (
-    <div className='gradient-background text-white min-h-screen min-w-screen flex flex-col'>
+    <div className='gradient-background text-white min-h-screen flex flex-col'>
       <main className='flex-grow'>
         <p className='text-7xl font-bold pt-12 mb-4'>RiftStats</p>
               
@@ -108,9 +108,9 @@ function App() {
         </div>
       </main>
       
-      <footer className='bg-slate-950 text-gray-300 py-8'>
+      <footer className='bg-slate-950 text-gray-300 py-12 my-auto'>
         <div className='flex flex-row justify-between max-w-7xl mx-auto'>
-          <p className='text-2xl font-bold'>RiftStats</p>
+          <p className='text-3xl font-bold'>RiftStats</p>
           <a href='https://github.com/andreluong/RiftStats' target='_blank' rel='noopener noreferrer'>
             <Icon icon='mdi:github' className='text-4xl mx-auto' />
           </a>
