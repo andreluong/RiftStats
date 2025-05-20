@@ -9,6 +9,7 @@ import { RegionCode, ChampionStats, Role, GameVersion } from './types'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr';
 import { fetcher } from './lib/utils'
+import { Icon } from '@iconify/react';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const TEN_MINUTES_IN_MS = 600000;
@@ -75,35 +76,46 @@ function App() {
   }, [gameVersionsError])
 
   return (
-    <div className='gradient-background text-white min-h-screen'>
-      <p className='text-7xl font-bold pt-12 mb-4'>RiftStats</p>
-      
-      {!numMatchesError && <p>Matches Analyzed: {numMatchesLoading ? ("...") : (numMatches || 0)}</p>}
-      {numMatchesError && <p>Matches Analyzed: Unknown</p>}
-      
-      <div className='mt-10 mx-auto w-4/6 pb-10'>
+    <div className='gradient-background text-white min-h-screen min-w-screen flex flex-col'>
+      <main className='flex-grow'>
+        <p className='text-7xl font-bold pt-12 mb-4'>RiftStats</p>
+              
+        {!numMatchesError && <p>Matches Analyzed: {numMatchesLoading ? ("...") : (numMatches || 0)}</p>}
+        {numMatchesError && <p>Matches Analyzed: Unknown</p>}
+        
+        <div className='mt-10 w-4/6 pb-10 max-w-7xl mx-auto'>
 
-        <div className='flex flex-row justify-between'>
-          <RoleSelection selectedRole={role} setSelectedRole={setRole} />
-          <div className='flex flex-row gap-4 py-4'>
-            <PatchMenu 
-              gameVersions={gameVersions} 
-              gameVersionLoading={gameVersionsLoading} 
-              selectedPatch={patch} 
-              setSelectedPatch={setPatch} 
-            />
-            <RankMenu />
-            <QueueMenu />
-            <RegionMenu selectedRegionCode={regionCode} setSelectedRegionCode={setRegionCode} />
+          <div className='flex flex-row justify-between'>
+            <RoleSelection selectedRole={role} setSelectedRole={setRole} />
+            <div className='flex flex-row gap-4 py-4'>
+              <PatchMenu 
+                gameVersions={gameVersions} 
+                gameVersionLoading={gameVersionsLoading} 
+                selectedPatch={patch} 
+                setSelectedPatch={setPatch} 
+              />
+              <RankMenu />
+              <QueueMenu />
+              <RegionMenu selectedRegionCode={regionCode} setSelectedRegionCode={setRegionCode} />
+            </div>
           </div>
-        </div>
 
-        <StatsTable 
-          championStats={filteredChampionStats} 
-          championStatsLoading={championStatsLoading} 
-          championStatsError={championStatsError} 
-        />
-      </div>
+          <StatsTable 
+            championStats={filteredChampionStats} 
+            championStatsLoading={championStatsLoading} 
+            championStatsError={championStatsError} 
+          />
+        </div>
+      </main>
+      
+      <footer className='bg-slate-950 text-gray-300 py-8'>
+        <div className='flex flex-row justify-between max-w-7xl mx-auto'>
+          <p className='text-2xl font-bold'>RiftStats</p>
+          <a href='https://github.com/andreluong/RiftStats' target='_blank' rel='noopener noreferrer'>
+            <Icon icon='mdi:github' className='text-4xl mx-auto' />
+          </a>
+        </div>        
+      </footer>
     </div>
   )
 }

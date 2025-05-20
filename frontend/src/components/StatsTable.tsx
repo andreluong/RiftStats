@@ -104,7 +104,14 @@ export default function StatsTable({
 
   return (
     <>      
-      <Table striped="even" stripedColor='#101828' withTableBorder withColumnBorders verticalSpacing="sm" className='bg-gray-800'>
+      <Table 
+        striped="even" 
+        stripedColor='#101828' 
+        withTableBorder 
+        withColumnBorders 
+        verticalSpacing="sm" 
+        className='bg-gray-800'
+      >
         <Table.Thead>
           <Table.Tr>
             {headers.map((h) => (
