@@ -1,17 +1,24 @@
 # RiftStats
 
-A League of Legends champion statistics application that fetches and analyzes matches across 15 regions using the Riot Games API.
-
+A League of Legends champion statistics application that fetches and analyzes champion data from matches across 15 regions using the Riot Games API. Currently, RiftStats focuses on Challenger matches in solo/duo queue.
 
 ## ⚡️ Tech Stack
 
 ### Client
+- React
+- TypeScript
+- TailwindCSS
+- Mantine UI
+- Vite
 
 ### Server
+- Java 17
+- Spring Boot
+- RabbitMQ
+- PostgreSQL
 
 
-
-## Data Flow
+## ➡️ Data Flow
 1. RiotService retrieves Challenger players from each region
 2. For each player, their latest match IDs are fetched and published to RabbitMQ
 3. MatchFetchService listens for match IDs from RabbitMQ
@@ -33,6 +40,10 @@ git clone https://github.com/andreluong/RiftStats.git
 1. Install dependencies in frontend folder
     ```
     npm install
+    ```
+3. Create a `.env` file with the API url:
+    ```
+    VITE_API_URL=http://localhost:8080
     ```
 2. Run in development mode
     ```
