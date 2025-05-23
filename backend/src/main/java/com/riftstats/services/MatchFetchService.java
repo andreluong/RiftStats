@@ -46,7 +46,7 @@ public class MatchFetchService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
-    public MatchFetchService(@Value("${riot.api}") String riotApiKey,
+    public MatchFetchService(@Value("${riot.api.key}") String riotApiKey,
                              RabbitTemplate rabbitTemplate,
                              RabbitMQConfig rabbitMQConfig,
                              MatchApiClientFactory matchApiClientFactory,

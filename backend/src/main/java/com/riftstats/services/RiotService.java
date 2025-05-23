@@ -37,6 +37,7 @@ public class RiotService {
     private static final String PUUID_KEY = "puuid";
     private static final Duration DEFAULT_FETCH_INTERVAL = Duration.ofDays(1);
     private final String riotApiKey;
+    private final boolean riotFetchEnabled;
     private final RabbitTemplate rabbitTemplate;
     private final RabbitMQConfig rabbitMQConfig;
     private final LeagueApiClientFactory leagueApiClientFactory;
@@ -50,7 +51,8 @@ public class RiotService {
             .constructCollectionType(ArrayList.class, String.class);
 
     @Autowired
-    public RiotService(@Value("${riot.api}") String riotApiKey,
+    public RiotService(@Value("${riot.api.key}") String riotApiKey,
+                       @Value("${riot.api.fetch.enabled}") boolean riotFetchEnabled,
                        RabbitTemplate rabbitTemplate,
                        RabbitMQConfig rabbitMQConfig,
                        LeagueApiClientFactory leagueApiClientFactory,
@@ -62,6 +64,7 @@ public class RiotService {
             throw new IllegalArgumentException(msg);
         }
         this.riotApiKey = riotApiKey;
+        this.riotFetchEnabled = riotFetchEnabled;
         this.rabbitTemplate = rabbitTemplate;
         this.rabbitMQConfig = rabbitMQConfig;
         this.leagueApiClientFactory = leagueApiClientFactory;
@@ -71,7 +74,9 @@ public class RiotService {
 
     @PostConstruct
     private void init() {
-        scheduleNextExecution(Duration.ofMillis(0));
+        if (riotFetchEnabled) {
+            scheduleNextExecution(Duration.ofMillis(0));
+        }
     }
 
     @PreDestroy
